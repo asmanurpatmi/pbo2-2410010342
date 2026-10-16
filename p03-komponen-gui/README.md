@@ -1,52 +1,48 @@
-\# P03 — Komponen GUI dengan Java Swing
+# Tugas 3 -Komponen GUI Swing
 
+## A. Tangkapan Layar Form Pemesanan Tiket Travel
 
-\## Identitas Praktikum
+### 1. Tema Terang
 
+Berikut adalah tampilan FormTiketTravel menggunakan tema terang.
 
-\- Mata Kuliah: Pemrograman Berorientasi Objek 2
-\- Modul: P03 — Komponen GUI
-\- Nama: Asma Nur Patmi
-\- NPM: 2410010342
-\- Program Studi: Teknik Informatika
+![Form Pemesanan Tiket Travel - Tema Terang](Screenshot-p03/Screenshot-tema%20terang.png)
 
+### 2. Tema Gelap
 
-\##Hasil Praktikum
+Berikut adalah tampilan FormTiketTravel menggunakan tema gelap.
 
-\### 1. FormTiketTravel — Tema Terang
+![Form Pemesanan Tiket Travel - Tema Gelap](Screenshot-p03/Screenshot-tema%20gelap.png)
 
-Berikut adalah hasil tampilan aplikasi FormTiketTravel dengan tema terang.
-!\[FormTiketTravel Tema Terang](Screenshot-p03/Screenshot-tema%20terang.png)
+---
 
-\### 2. FormTiketTravel — Tema Gelap
+## B. Tab Design FormTiketTravel (Jendela Navigator)
 
-Berikut adalah hasil tampilan aplikasi FormTiketTravel dengan tema gelap.
-!\[FormTiketTravel Tema Gelap](Screenshot-p03/Screenshot-tema%20gelap.png)
+Berikut adalah tampilan Design FormTiketTravel di NetBeans beserta jendela Navigator.
 
-\### 3. Design FormTiketTravel dan Navigator
+![Tab Design FormTiketTravel dan Navigator](Screenshot-p03/Screenshot-Design%20%2B%20Navigator.png)
 
-Berikut adalah tampilan Design FormTiketTravel pada NetBeans beserta jendela Navigator.
-!\[Design FormTiketTravel dan Navigator](Screenshot-p03/Screenshot-Design%20%2B%20Navigator.png)
+---
 
+## C. Jawaban Pertanyaan Refleksi (Bagian G)
 
-\## Pertanyaan Refleksi G
+1\. Apa perbedaan top-level container, intermediate container, dan atomic component? Berikan masing-masing satu contoh.
 
-\### 1. Jelaskan perbedaan top-level container, intermediate container, dan atomic component.
+Top-level container adalah wadah utama berupa jendela aplikasi, contohnya JFrame. Intermediate container adalah wadah untuk 
+Top-level container adalah wadah utama yang digunakan sebagai jendela aplikasi, contohnya JFrame. Intermediate container adalah wadah untuk mengelompokkan komponen lain, contohnya JPanel. Sedangkan atomic component adalah komponen yang digunakan langsung untuk berinteraksi dengan pengguna, contohnya JButton.
 
-Top-level container adalah wadah utama aplikasi, contohnya `JFrame`. Intermediate container digunakan untuk mengelompokkan komponen lain, contohnya `JPanel`. Atomic component merupakan komponen yang digunakan langsung oleh pengguna, contohnya `JButton` dan `JTextField`.
+2\. Mengapa kedua JRadioButton perlu diberi properti buttonGroup yang sama?
 
-\### 2. Mengapa JRadioButton yang menjadi pilihan dalam satu kelompok perlu menggunakan ButtonGroup?
+Karena JRadioButton yang memiliki buttonGroup yang sama hanya bisa memilih satu pilihan. Misalnya pada pilihan kelas Ekonomi dan Bisnis, pengguna hanya boleh memilih salah satunya. Jadi kalau Ekonomi dipilih, Bisnis akan otomatis tidak terpilih.
 
-Karena JRadioButton dalam ButtonGroup yang sama hanya dapat dipilih satu pada satu waktu. Contohnya, pengguna hanya dapat memilih kelas Ekonomi atau Bisnis. Jika satu pilihan dipilih, pilihan lainnya akan otomatis tidak terpilih.
+3\. Kapan Anda memilih JComboBox dibandingkan JRadioButton?
 
-\### 3. Kapan sebaiknya menggunakan JComboBox dibandingkan JRadioButton?
+Saya memilih JComboBox jika pilihan yang tersedia cukup banyak dan tidak ingin membuat tampilan terlalu penuh. Sedangkan JRadioButton lebih cocok jika pilihannya sedikit dan semua pilihan ingin langsung terlihat.
 
-JComboBox cocok digunakan jika pilihan cukup banyak agar tampilan tidak terlalu penuh. JRadioButton cocok digunakan jika pilihan sedikit dan ingin semua pilihan langsung terlihat. Contohnya, kota tujuan menggunakan JComboBox, sedangkan pilihan kelas Ekonomi dan Bisnis menggunakan JRadioButton.
+4\. Mengapa kode di dalam initComponents() tidak boleh diedit langsung, dan dimana kode tambahan seharusnya ditulis?
 
-\### 4. Mengapa kode tidak sebaiknya ditambahkan langsung ke dalam initComponents()?
+Karena initComponents() merupakan kode yang otomatis oleh NetBeans dari tampilan Design. Jika diedit langsung, perubahan bisa tertimpa ketika tampilan form diubah melalui Design. Kode tambahan sebaiknya ditulis di luar bagian initComponents(), misalnya di konstruktor setelah initComponents(), pada event handler, atau pada method tambahan.
 
-Karena `initComponents()` merupakan kode yang dibuat secara otomatis oleh NetBeans. Perubahan langsung pada bagian tersebut dapat tertimpa ketika desain form diubah melalui GUI Builder. Kode tambahan sebaiknya ditulis di konstruktor setelah `initComponents()`, pada event handler, atau pada method tambahan.
+5\. Mengapa FlatLightLaf.setup() harus dipanggil sebelum form dibuat?
 
-\### 5. Mengapa FlatLightLaf.setup() dipanggil sebelum form dibuat?
-
-Karena `FlatLightLaf.setup()` digunakan untuk mengatur tema tampilan Swing. Jika dipanggil sebelum form dibuat, komponen pada form dapat menggunakan tema FlatLaf sejak pertama kali ditampilkan.
+Karena FlatLightLaf.setup() digunakan untuk mengatur tampilan atau tema Swing terlebih dahulu. Jika dipanggil sebelum form dibuat, komponen yang ada di dalam form akan langsung menggunakan tema FlatLaf saat pertama kali ditampilkan.
