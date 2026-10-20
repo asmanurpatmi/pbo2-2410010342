@@ -106,9 +106,10 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
 
         getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
 
+        isiPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 16, 8, 16));
         isiPanel.setLayout(new java.awt.BorderLayout());
 
-        formPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        formPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 16, 8, 16));
         formPanel.setLayout(new java.awt.GridBagLayout());
 
         jLabel1.setText("Data anggota");
