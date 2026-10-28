@@ -38,3 +38,15 @@
 - Tombol Daftar tidak aktif saat form pertama kali dibuka.
 - Tombol Daftar aktif setelah checkbox persetujuan dicentang.
 
+## Tangkapan Layar
+### 1. Jendela Properties Bagian Events untuk Tombol Daftar
+![Jendela Properties bagian Events untuk tombol Daftar](Screnshoot-P05/Screenshot_jendela_Properties.png)
+
+### 2. Dialog Ringkasan Data Anggota
+![Dialog Ringkasan Data Anggota](Screnshoot-P05/Screenshot_dialog_ringkasan.png)
+
+### 3. Dialog Konfirmasi Keluar
+![Dialog Konfirmasi Keluar](Screnshoot-P05/Screenshot_dialog_konfirmasi_keluar.png)
+
+## Deklarasi Penggunaan AI
+Saya menggunakan AI (ChatGPT) untuk membantu mengatasi kendala saat membuat Form Anggota Perpustakaan di NetBeans, terutama dalam penerapan event handling dan pengaturan komponen form.
