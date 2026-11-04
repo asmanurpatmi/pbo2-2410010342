@@ -62,6 +62,52 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
         getRootPane().setDefaultButton(daftarButton);
         pack();
         setLocationRelativeTo(null);
+        
+        // Label Nama
+        jLabel3.setDisplayedMnemonic('A');
+        jLabel3.setLabelFor(namaField);
+
+        // Label Program Studi
+        jLabel4.setDisplayedMnemonic('P');
+        jLabel4.setLabelFor(prodiComboBox);
+    
+        // Label Jenis Anggota
+        jLabel5.setDisplayedMnemonic('J');
+        jLabel5.setLabelFor(mahasiswaRadioButton);
+
+        // Label Email
+        jLabel7.setDisplayedMnemonic('E');
+        jLabel7.setLabelFor(emailField);
+
+        // Label Nomor HP
+        jLabel8.setDisplayedMnemonic('H');
+        jLabel8.setLabelFor(hpField);
+
+        // Label Alamat
+        jLabel9.setDisplayedMnemonic('L');
+        jLabel9.setLabelFor(jTextArea1);
+        
+        // Menghapus tanda error Program Studi saat sudah dipilih
+        prodiComboBox.addActionListener(e -> {
+            if (prodiComboBox.getSelectedIndex() != 0) {
+                prodiComboBox.putClientProperty(
+                "JComponent.outline", null
+                );
+            }
+        });
+
+        // Menghapus tanda error Jenis Anggota saat sudah dipilih
+        java.awt.event.ItemListener pilihanAnggota = e -> {
+            if (jenisAnggotaGroup.getSelection() != null) {
+                jenisPanel.putClientProperty(
+                    "JComponent.outline", null
+                );
+            }
+        };
+
+        mahasiswaRadioButton.addItemListener(pilihanAnggota);
+        dosenRadioButton.addItemListener(pilihanAnggota);
+        umumRadioButton.addItemListener(pilihanAnggota);
     }
     
     /**
@@ -197,14 +243,14 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         formPanel.add(namaField, gridBagConstraints);
 
-        jLabel4.setText("Program studi");
+        jLabel4.setText("Program Studi");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         formPanel.add(jLabel4, gridBagConstraints);
 
-        prodiComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Program Studi", "Teknik Informatika", "Sistem Informasi", "Teknik Sipil", "Manajemen", "Ilmu komunikasi" }));
+        prodiComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Program Studi", "Teknik Informatika", "Sistem Informasi", "Teknik Sipil", "Manajemen", "Ilmu Komunikasi" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
@@ -487,24 +533,40 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
     }//GEN-LAST:event_hpFieldKeyTyped
 
     private void npmFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_npmFieldFocusLost
-        periksaNpm();
+        if (!npmField.getText().isBlank()) {
+            periksaNpm();
+        } else {
+            tandai(npmField, npmErrorLabel, null);
+        }
     }//GEN-LAST:event_npmFieldFocusLost
 
     private void namaFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_namaFieldFocusLost
-        periksaNama();
+        if (!namaField.getText().isBlank()) {
+            periksaNama();
+        } else {
+            tandai(namaField, namaErrorLabel, null);
+        }
     }//GEN-LAST:event_namaFieldFocusLost
 
     private void emailFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_emailFieldFocusLost
-        periksaEmail();
+        if (!emailField.getText().isBlank()) {
+            periksaEmail();
+        } else {
+            tandai(emailField, emailErrorLabel, null);
+        }
     }//GEN-LAST:event_emailFieldFocusLost
 
     private void hpFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_hpFieldFocusLost
-        periksaHp();
+        if (!hpField.getText().isBlank()) {
+            periksaHp();
+        } else {
+            tandai(hpField, hpErrorLabel, null);
+        }
     }//GEN-LAST:event_hpFieldFocusLost
 
     private void daftarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_daftarButtonActionPerformed
-
-        java.util.List<javax.swing.JComponent> salah = new java.util.ArrayList<>();
+        java.util.List<javax.swing.JComponent> salah =
+            new java.util.ArrayList<>();
 
         if (!periksaNpm()) {
             salah.add(npmField);
@@ -521,32 +583,45 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
         if (!periksaHp()) {
             salah.add(hpField);
         }
-        
-        if (jenisAnggotaGroup.getSelection() == null) {
-            javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "Silakan pilih jenis anggota.",
-                "Validasi Data",
-                javax.swing.JOptionPane.WARNING_MESSAGE
-            );
 
-            mahasiswaRadioButton.requestFocusInWindow();
-            return;
+        if (prodiComboBox.getSelectedIndex() == 0) {
+            prodiComboBox.putClientProperty(
+                "JComponent.outline", "error"
+            );
+            salah.add(prodiComboBox);
+        } else {
+            prodiComboBox.putClientProperty(
+                "JComponent.outline", null
+            );
         }
-        
+
+        if (jenisAnggotaGroup.getSelection() == null) {
+            jenisPanel.putClientProperty(
+                "JComponent.outline", "error"
+            );
+            salah.add(mahasiswaRadioButton);
+        } else {
+            jenisPanel.putClientProperty(
+                "JComponent.outline", null
+            );
+        }
+
+        // Menghitung seluruh kesalahan
         jumlahError = salah.size();
 
+        // Menampilkan status jika masih ada kesalahan
         if (jumlahError > 0) {
             statusLabel.setForeground(java.awt.Color.RED);
             statusLabel.setText(
                 "Terdapat " + jumlahError
-                + " kesalahan. Silakan periksa data berwarna merah."
+                + " kesalahan. Silakan periksa kembali data."
             );
 
             salah.get(0).requestFocusInWindow();
             return;
         }
 
+        // Jika semua data valid
         statusLabel.setForeground(new java.awt.Color(0, 128, 0));
         statusLabel.setText("Data berhasil divalidasi!");
 
@@ -561,20 +636,20 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
         }
 
         String ringkasan = "RINGKASAN DATA ANGGOTA\n\n"
-        + "NPM: " + npmField.getText() + "\n"
-        + "Nama: " + namaField.getText() + "\n"
-        + "Program Studi: " + prodiComboBox.getSelectedItem() + "\n"
-        + "Jenis Anggota: " + jenisAnggota + "\n"
-        + "Email: " + emailField.getText() + "\n"
-        + "Nomor HP: " + hpField.getText() + "\n"
-        + "Alamat: " + jTextArea1.getText();
+            + "NPM: " + npmField.getText() + "\n"
+            + "Nama: " + namaField.getText() + "\n"
+            + "Program Studi: " + prodiComboBox.getSelectedItem() + "\n"
+            + "Jenis Anggota: " + jenisAnggota + "\n"
+            + "Email: " + emailField.getText() + "\n"
+            + "Nomor HP: " + hpField.getText() + "\n"
+            + "Alamat: " + jTextArea1.getText();
 
         javax.swing.JOptionPane.showMessageDialog(
             this,
             ringkasan,
             "Ringkasan Pendaftaran",
             javax.swing.JOptionPane.INFORMATION_MESSAGE
-        );
+        );   
     }//GEN-LAST:event_daftarButtonActionPerformed
 
     private void batalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_batalButtonActionPerformed
