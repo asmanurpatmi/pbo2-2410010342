@@ -13,7 +13,7 @@ import javax.swing.table.TableRowSorter;
 
 /**
  *
- * @author ASUS
+ * @author LENOVO
  */
 public class AplikasiKontak extends javax.swing.JFrame {
     

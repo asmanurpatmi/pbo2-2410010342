@@ -7,6 +7,11 @@ package id.ac.uniska.pbo2.p07;
 import com.formdev.flatlaf.FlatLaf;
 import java.awt.Color;
 
+/**
+ *
+ * @author LENOVO
+ */
+
 public class DialogKontak extends javax.swing.JDialog {
 
     private Kontak hasil; // Tetap null jika pengguna membatalkan
