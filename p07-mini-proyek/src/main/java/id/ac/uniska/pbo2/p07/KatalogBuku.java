@@ -5,6 +5,9 @@
 package id.ac.uniska.pbo2.p07;
 
 import javax.swing.table.TableRowSorter;
+import java.util.regex.Pattern;
+import javax.swing.RowFilter;
+import com.formdev.flatlaf.FlatLightLaf;
 
 /**
  *
@@ -17,11 +20,30 @@ public class KatalogBuku extends javax.swing.JFrame {
     private final BukuTableModel model = new BukuTableModel();
     private final TableRowSorter<BukuTableModel> sorter =
         new TableRowSorter<>(model);
+    
     /**
      * Creates new form KatalogBuku
      */
+    
     public KatalogBuku() {
         initComponents();
+        
+        bukuTable.setRowSorter(sorter);
+        bukuTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        perbaruiStatus();
+        
+        ubahButton.setEnabled(false);
+        hapusButton.setEnabled(false);
+        
+        bukuTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                boolean adaPilihan = bukuTable.getSelectedRow() >= 0;
+
+                ubahButton.setEnabled(adaPilihan);
+                hapusButton.setEnabled(adaPilihan);
+                }
+        });
     }
 
     /**
@@ -40,29 +62,46 @@ public class KatalogBuku extends javax.swing.JFrame {
         ubahButton = new javax.swing.JButton();
         hapusButton = new javax.swing.JButton();
         tabelPanel = new javax.swing.JPanel();
-        statusLabel = new javax.swing.JLabel();
         tabelScroll = new javax.swing.JScrollPane();
         bukuTable = new javax.swing.JTable();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        statusLabel = new javax.swing.JLabel();
+        bukuMenuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        keluarItem = new javax.swing.JMenuItem();
+        bukuMenu = new javax.swing.JMenu();
+        tambahItem = new javax.swing.JMenuItem();
+        ubahItem = new javax.swing.JMenuItem();
+        bukuSeparator = new javax.swing.JPopupMenu.Separator();
+        hapusItem = new javax.swing.JMenuItem();
+        bantuanMenu = new javax.swing.JMenu();
+        tentangItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Katalog Buku Perpustakaan");
 
         atasPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 4, 8, 12));
         atasPanel.setLayout(new java.awt.BorderLayout(8, 0));
+
+        cariField.setColumns(20);
+        cariField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                cariFieldKeyReleased(evt);
+            }
+        });
         atasPanel.add(cariField, java.awt.BorderLayout.EAST);
 
         tombolPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 8, 0));
 
         tambahButton.setText("Tambah");
+        tambahButton.addActionListener(this::tambahButtonActionPerformed);
         tombolPanel.add(tambahButton);
 
         ubahButton.setText("Ubah");
+        ubahButton.addActionListener(this::ubahButtonActionPerformed);
         tombolPanel.add(ubahButton);
 
         hapusButton.setText("Hapus");
+        hapusButton.addActionListener(this::hapusButtonActionPerformed);
         tombolPanel.add(hapusButton);
 
         atasPanel.add(tombolPanel, java.awt.BorderLayout.WEST);
@@ -72,67 +111,217 @@ public class KatalogBuku extends javax.swing.JFrame {
         tabelPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 12, 0, 12));
         tabelPanel.setLayout(new java.awt.BorderLayout());
 
-        statusLabel.setText("Total buku: 5 | Tersedia: 4");
-        tabelPanel.add(statusLabel, java.awt.BorderLayout.SOUTH);
-
         bukuTable.setModel(model);
+        bukuTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bukuTableMouseClicked(evt);
+            }
+        });
         tabelScroll.setViewportView(bukuTable);
 
         tabelPanel.add(tabelScroll, java.awt.BorderLayout.CENTER);
 
+        statusLabel.setText("Total buku: 5 | Tersedia: 4");
+        tabelPanel.add(statusLabel, java.awt.BorderLayout.SOUTH);
+
         getContentPane().add(tabelPanel, java.awt.BorderLayout.CENTER);
 
-        jMenu1.setMnemonic('F');
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        fileMenu.setMnemonic('F');
+        fileMenu.setText("File");
 
-        jMenu2.setMnemonic('B');
-        jMenu2.setText("Buku");
-        jMenuBar1.add(jMenu2);
+        keluarItem.setText("Keluar");
+        keluarItem.addActionListener(this::keluarItemActionPerformed);
+        fileMenu.add(keluarItem);
 
-        setJMenuBar(jMenuBar1);
+        bukuMenuBar.add(fileMenu);
+
+        bukuMenu.setMnemonic('B');
+        bukuMenu.setText("Buku");
+
+        tambahItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        tambahItem.setText("Tambah");
+        tambahItem.addItemListener(this::tambahItemItemStateChanged);
+        tambahItem.addActionListener(this::tambahItemActionPerformed);
+        bukuMenu.add(tambahItem);
+
+        ubahItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        ubahItem.setText("Ubah");
+        ubahItem.addActionListener(this::ubahItemActionPerformed);
+        bukuMenu.add(ubahItem);
+        bukuMenu.add(bukuSeparator);
+
+        hapusItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        hapusItem.setText("Hapus Buku");
+        hapusItem.addActionListener(this::hapusItemActionPerformed);
+        bukuMenu.add(hapusItem);
+
+        bukuMenuBar.add(bukuMenu);
+
+        bantuanMenu.setText("Bantuan");
+
+        tentangItem.setText("Tentang");
+        tentangItem.addActionListener(this::tentangItemActionPerformed);
+        bantuanMenu.add(tentangItem);
+
+        bukuMenuBar.add(bantuanMenu);
+
+        setJMenuBar(bukuMenuBar);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tambahButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahButtonActionPerformed
+        tambah();
+    }//GEN-LAST:event_tambahButtonActionPerformed
+
+    private void ubahButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahButtonActionPerformed
+        ubah();
+    }//GEN-LAST:event_ubahButtonActionPerformed
+
+    private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
+        hapus();
+    }//GEN-LAST:event_hapusButtonActionPerformed
+
+    private void tambahItemItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_tambahItemItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tambahItemItemStateChanged
+
+    private void tambahItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahItemActionPerformed
+        tambah();
+    }//GEN-LAST:event_tambahItemActionPerformed
+
+    private void ubahItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahItemActionPerformed
+        ubah();
+    }//GEN-LAST:event_ubahItemActionPerformed
+
+    private void hapusItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusItemActionPerformed
+        hapus();
+    }//GEN-LAST:event_hapusItemActionPerformed
+
+    private void cariFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cariFieldKeyReleased
+        saring();
+    }//GEN-LAST:event_cariFieldKeyReleased
+
+    private void bukuTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bukuTableMouseClicked
+        ubah();
+    }//GEN-LAST:event_bukuTableMouseClicked
+
+    private void keluarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keluarItemActionPerformed
+        dispose();
+    }//GEN-LAST:event_keluarItemActionPerformed
+
+    private void tentangItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tentangItemActionPerformed
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Katalog Buku Perpustakaan\nMini Proyek Pertemuan 7 PBO 2",
+            "Tentang",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_tentangItemActionPerformed
+    
+    private void saring() {
+        String kata = cariField.getText().trim();
+
+        if (kata.isEmpty()) {
+            sorter.setRowFilter(null);
+        } else {
+            sorter.setRowFilter(
+                RowFilter.regexFilter("(?i)" + Pattern.quote(kata), 0, 1, 2)
+            );
+        }
+        
+        perbaruiStatus();
+    }
+    
+    private void tambah() {
+        Buku baru = new DialogBuku(this, "Tambah Buku", null).tampilkan();
+
+        if (baru != null) {
+            model.tambahBuku(baru);
+            statusLabel.setText("Total buku: " + model.getRowCount()
+                + " | Tersedia: " + model.jumlahTersedia());
+        }
+    }
+    
+    private void ubah() {
+        int barisTampilan = bukuTable.getSelectedRow();
+
+        if (barisTampilan < 0) {
+            return;
+        }
+
+        int barisModel = bukuTable.convertRowIndexToModel(barisTampilan);
+
+        Buku awal = model.getBuku(barisModel);
+        Buku hasil = new DialogBuku(this, "Ubah Buku", awal).tampilkan();
+
+        if (hasil != null) {
+            model.ubahBuku(barisModel, hasil);
+
+            statusLabel.setText("Total buku: " + model.getRowCount()
+                + " | Tersedia: " + model.jumlahTersedia());
+        }
+    }
+    
+    private void hapus() {
+        int barisTampilan = bukuTable.getSelectedRow();
+
+        if (barisTampilan < 0) {
+            return;
+        }
+
+        int barisModel = bukuTable.convertRowIndexToModel(barisTampilan);
+        Buku buku = model.getBuku(barisModel);
+
+        int jawab = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "Hapus buku " + buku.getJudul() + "?",
+            "Konfirmasi Hapus",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+
+        if (jawab == javax.swing.JOptionPane.YES_OPTION) {
+            model.hapusBuku(barisModel);
+
+            statusLabel.setText("Total buku: " + model.getRowCount()
+                + " | Tersedia: " + model.jumlahTersedia());
+        }
+    }
+    
+        private void perbaruiStatus() {
+            statusLabel.setText("Menampilkan " + bukuTable.getRowCount()
+                + " dari " + model.getRowCount()
+                + " buku | Tersedia: " + model.jumlahTersedia());
+        }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+        FlatLightLaf.setup();
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new KatalogBuku().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel atasPanel;
+    private javax.swing.JMenu bantuanMenu;
+    private javax.swing.JMenu bukuMenu;
+    private javax.swing.JMenuBar bukuMenuBar;
+    private javax.swing.JPopupMenu.Separator bukuSeparator;
     private javax.swing.JTable bukuTable;
     private javax.swing.JTextField cariField;
+    private javax.swing.JMenu fileMenu;
     private javax.swing.JButton hapusButton;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem hapusItem;
+    private javax.swing.JMenuItem keluarItem;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JPanel tabelPanel;
     private javax.swing.JScrollPane tabelScroll;
     private javax.swing.JButton tambahButton;
+    private javax.swing.JMenuItem tambahItem;
+    private javax.swing.JMenuItem tentangItem;
     private javax.swing.JPanel tombolPanel;
     private javax.swing.JButton ubahButton;
+    private javax.swing.JMenuItem ubahItem;
     // End of variables declaration//GEN-END:variables
 }
