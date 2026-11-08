@@ -1,8 +1,14 @@
 # Pertemuan PBO P06
 
 ## Foto atau Pindaian Lembar Peer Review
+![Lembar Peer Review Heuristik](Screnshoot-P06/Lembar-Peer-Review-Heuristik.png)
 
-## Tabel singkat berisi temuan dari teman dan perbaikan
+## Tabel Temuan Peer Review dan Perbaikan
+| No. | Temuan dari Teman | Skor | Perbaikan yang Dilakukan | Commit |
+|---|---|---:|---|---|
+| 1 | Validasi sebaiknya dilakukan sejak pengguna mulai mengisi data agar kesalahan dapat diketahui lebih awal. | 2 | Menambahkan validasi langsung saat pengguna mengetik pada kolom NPM, nama, email, dan nomor HP. | `2ab9b33` |
+| 2 | Jarak antara bagian Jenis Anggota dan judul Kontak masih terlalu dekat. | 1 | Menambahkan jarak pada judul Kontak agar tampilan form lebih rapi. | `2ab9b33` |
+| 3 | Aplikasi belum menyediakan bantuan atau petunjuk penggunaan secara khusus. | 2 | Menambahkan tombol Petunjuk yang menampilkan panduan penggunaan formulir. | `2ab9b33` |
 
 ## Tangkapan layar (screenshot) formAnggota dengan pesan kesalahan
 ![Screenshot Form dengan Pesan Kesalahan](Screnshoot-P06/Screenshot-Form-dengan-Pesan-Kesalahan.png)
