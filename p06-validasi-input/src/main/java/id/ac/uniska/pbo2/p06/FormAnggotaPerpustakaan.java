@@ -23,6 +23,15 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
     public FormAnggotaPerpustakaan() {
         initComponents();
         
+        pasangValidasiLangsung(npmField, this::periksaNpm);
+        pasangValidasiLangsung(namaField, this::periksaNama);
+        pasangValidasiLangsung(emailField, this::periksaEmail);
+        pasangValidasiLangsung(hpField, this::periksaHp);
+        
+        jLabel6.setBorder(
+            javax.swing.BorderFactory.createEmptyBorder(10, 0, 0, 0)
+        );
+        
         java.awt.Font fontBagian = new java.awt.Font(
             "SansSerif",
             java.awt.Font.BOLD,
@@ -154,6 +163,7 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
         statusLabel = new javax.swing.JLabel();
         bawahPanel = new javax.swing.JPanel();
         tombolPanel = new javax.swing.JPanel();
+        petunjukButton = new javax.swing.JButton();
         batalButton = new javax.swing.JButton();
         daftarButton = new javax.swing.JButton();
 
@@ -409,6 +419,10 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
 
         tombolPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 8, 0));
 
+        petunjukButton.setText("Petunjuk");
+        petunjukButton.addActionListener(this::petunjukButtonActionPerformed);
+        tombolPanel.add(petunjukButton);
+
         batalButton.setText("Batal");
         batalButton.addActionListener(this::batalButtonActionPerformed);
         tombolPanel.add(batalButton);
@@ -424,6 +438,42 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void pasangValidasiLangsung(
+            javax.swing.JTextField field,
+            Runnable pemeriksaan) {
+
+        field.getDocument().addDocumentListener(
+            new javax.swing.event.DocumentListener() {
+
+                private void periksa() {
+                    if (!field.getText().isBlank()) {
+                        pemeriksaan.run();
+                    } else {
+                    field.putClientProperty("JComponent.outline", null);
+                    }
+                }
+
+                @Override
+                public void insertUpdate(
+                        javax.swing.event.DocumentEvent e) {
+                    periksa();
+                }
+
+                @Override
+                public void removeUpdate(
+                        javax.swing.event.DocumentEvent e) {
+                    periksa();
+                }
+
+                @Override
+                public void changedUpdate(
+                        javax.swing.event.DocumentEvent e) {
+                    periksa();
+                }
+            }
+        );
+    }
     
     private boolean tandai(
             JComponent isian,
@@ -701,6 +751,23 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
         npmField.requestFocusInWindow();
     }//GEN-LAST:event_batalButtonActionPerformed
 
+    private void petunjukButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_petunjukButtonActionPerformed
+        javax.swing.JOptionPane.showMessageDialog(
+            this,
+            "PETUNJUK PENGGUNAAN FORM ANGGOTA\n\n"
+            + "1. Isi NPM dengan 10 angka.\n"
+            + "2. Masukkan nama lengkap tanpa angka.\n"
+            + "3. Pilih program studi.\n"
+            + "4. Pilih jenis anggota.\n"
+            + "5. Masukkan email dengan format yang benar.\n"
+            + "6. Masukkan nomor HP yang diawali 08.\n"
+            + "7. Isi alamat dan centang persetujuan.\n"
+            + "8. Klik tombol Daftar untuk menyimpan data.",
+            "Petunjuk Penggunaan",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+    }//GEN-LAST:event_petunjukButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -746,6 +813,7 @@ public class FormAnggotaPerpustakaan extends javax.swing.JFrame {
     private javax.swing.JTextField namaField;
     private javax.swing.JLabel npmErrorLabel;
     private javax.swing.JTextField npmField;
+    private javax.swing.JButton petunjukButton;
     private javax.swing.JComboBox<String> prodiComboBox;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JPanel tombolPanel;
