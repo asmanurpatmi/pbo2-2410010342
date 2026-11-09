@@ -12,8 +12,7 @@
 
 ## Video Demo
 Video demo aplikasi Katalog Buku Perpustakaan:
-
-blommm
+https://drive.google.com/file/d/10utnqC6vZjqOJSsg9xkfiNj88BxKuOpa/view?usp=drivesdk
 
 ## Deklarasi Penggunaan AI
 Dalam pengerjaan mini proyek ini, saya menggunakan ChatGPT sebagai alat bantu membantu dalam memahami isi kode, dan memperbaiki kesalahan pada kode program.
